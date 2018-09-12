@@ -1,5 +1,6 @@
-package com.example.canteencookapp;
+package com.example.canteencookapp.Activities;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.canteencookapp.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -60,6 +62,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child(ID).exists()){
                     Toast.makeText(LoginActivity.this, "Valid ID", Toast.LENGTH_LONG).show();
+//                    send category through intent
+                    Intent i = new Intent(LoginActivity.this, OrderListActivity.class);
+                    startActivity(i);
                 }
                 else{
 //                    hide progress dialog
