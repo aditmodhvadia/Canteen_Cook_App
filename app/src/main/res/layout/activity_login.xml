@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:background="#fff"
     android:fitsSystemWindows="true"
-    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
     android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
     tools:context=".MainActivity">
 
     <!-- TODO: improve the UI and set the toolbar to extend down-->
@@ -25,6 +25,17 @@
         app:titleTextColor="#fff">
 
     </android.support.v7.widget.Toolbar>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:visibility="gone"
+        app:layout_constraintHorizontal_bias="0.50"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
 
     <EditText
         android:id="@+id/idEditText"

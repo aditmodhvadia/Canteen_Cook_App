@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.canteencookapp.R;
@@ -20,6 +21,9 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText idEditText;
     Button loginButton;
+    ProgressBar progressBar;
+
+    String CATEGORY = "Category";
 
     DatabaseReference cookRoot;
 
@@ -30,10 +34,12 @@ public class LoginActivity extends AppCompatActivity {
 
         idEditText = findViewById(R.id.idEditText);
         loginButton = findViewById(R.id.loginButton);
+        progressBar = findViewById(R.id.progressBar);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 validateID();
             }
         });
@@ -47,12 +53,14 @@ public class LoginActivity extends AppCompatActivity {
         if(ID.isEmpty()){
             idEditText.setError("Enter ID first");
             idEditText.requestFocus();
+            progressBar.setVisibility(View.GONE);
             return;
         }
 
         if(ID.length()<5){
             idEditText.setError("Enter ID first");
             idEditText.requestFocus();
+            progressBar.setVisibility(View.GONE);
             return;
         }
 
@@ -61,20 +69,26 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child(ID).exists()){
-                    Toast.makeText(LoginActivity.this, "Valid ID", Toast.LENGTH_LONG).show();
 //                    send category through intent
+                    String category = dataSnapshot.child(ID).child(CATEGORY).getValue().toString();
                     Intent i = new Intent(LoginActivity.this, OrderListActivity.class);
+                    progressBar.incrementProgressBy(2);
+                    i.putExtra(CATEGORY,category);
+                    progressBar.setVisibility(View.GONE);
+                    idEditText.setText("");
                     startActivity(i);
                 }
                 else{
 //                    hide progress dialog
-                    Toast.makeText(LoginActivity.this, "Invalid ID", Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
+                    idEditText.setError("Invalid ID");
+                    idEditText.setText("");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Toast.makeText(LoginActivity.this, databaseError.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
