@@ -35,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
         idEditText = findViewById(R.id.idEditText);
         loginButton = findViewById(R.id.loginButton);
         progressBar = findViewById(R.id.progressBar);

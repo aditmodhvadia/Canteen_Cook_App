@@ -29,6 +29,7 @@ public class OrderListActivity extends AppCompatActivity {
     DatabaseReference root;
 
     ArrayList<String> orderID, orderTime, orderRollNo;
+    String CATEGORY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class OrderListActivity extends AppCompatActivity {
         orderRollNo = new ArrayList<>();
 
         Intent data = getIntent();
+        CATEGORY = data.getStringExtra("Category");
 
         ordersHeadingTextView.setText(ordersHeadingTextView.getText().toString() + data.getStringExtra("Category"));
 
@@ -55,12 +57,14 @@ public class OrderListActivity extends AppCompatActivity {
                 orderID.clear();
                 orderRollNo.clear();
                 for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    orderID.add(dsp.getKey());
-                    ordersHeadingTextView.setText(ordersHeadingTextView.getText().toString() +"\n" +dsp.getKey() +" " +dsp.getValue().toString());
-//                    orderRollNo.add(dsp.getValue().toString());
-//                    Toast.makeText(getApplicationContext(), dsp.getValue().toString(), Toast.LENGTH_SHORT).show();
-
+                    if (dsp.child("Items").child(CATEGORY).exists()) {
+                        orderID.add(dsp.getKey());
+                        orderRollNo.add(dsp.child("Roll No").getValue().toString());
+                        orderTime.add(dsp.child("Time to deliver").getValue().toString());
+                    }
                 }
+                orderListAdapter = new OrderListAdapter(orderID, orderTime, orderRollNo, getApplicationContext());
+                ordersListView.setAdapter(orderListAdapter);
 
             }
 
@@ -69,8 +73,6 @@ public class OrderListActivity extends AppCompatActivity {
                 Toast.makeText(OrderListActivity.this, databaseError.toString(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
 
 
     }
