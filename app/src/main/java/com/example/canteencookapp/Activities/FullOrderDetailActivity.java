@@ -49,9 +49,13 @@ public class FullOrderDetailActivity extends AppCompatActivity {
         orderRoot.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                orderItemName.clear();
+////                orderItemQuantity.clear();
                 for (DataSnapshot dsp : dataSnapshot.getChildren()){
-                    orderItemName.add(dsp.getKey().toString());
-                    orderItemQuantity.add(dsp.child("Quantity").getValue().toString());
+                    if(!orderItemName.contains(dsp.getKey())){
+                        orderItemName.add(dsp.getKey());
+                        orderItemQuantity.add(dsp.child("Quantity").getValue().toString());
+                    }
                 }
                 fullOrderDisplayAdapter = new FullOrderDisplayAdapter(orderItemName, orderItemQuantity, getApplicationContext());
                 fullOrderListView.setAdapter(fullOrderDisplayAdapter);

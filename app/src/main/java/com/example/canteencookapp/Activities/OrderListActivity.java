@@ -49,20 +49,51 @@ public class OrderListActivity extends AppCompatActivity {
 
         ordersHeadingTextView.setText(ordersHeadingTextView.getText().toString() + data.getStringExtra("Category"));
 
-        root = FirebaseDatabase.getInstance().getReference().child("Order");
-        root.keepSynced(true);
+        root = FirebaseDatabase.getInstance().getReference();
+//        root.keepSynced(true);
 
-        root.addValueEventListener(new ValueEventListener() {
+        //test with on Child event listener
+//        root.child("Order").addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                ordersHeadingTextView.setText("Key = " +dataSnapshot.getKey()+"\nValue = " +dataSnapshot.getValue().toString() +"\n String = " +s);
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                ordersHeadingTextView.setText("Key = " +dataSnapshot.getKey()+"\nValue = " +dataSnapshot.getValue().toString() +"\n String = " +s);
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//                ordersHeadingTextView.setText("Key = " +dataSnapshot.getKey()+"\nValue = " +dataSnapshot.getValue().toString());
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
+        root.child("Order").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 orderTime.clear();
                 orderID.clear();
                 orderRollNo.clear();
                 for (DataSnapshot dsp : dataSnapshot.getChildren()) {
                     if (dsp.child("Items").child(CATEGORY).exists()) {
                         orderID.add(dsp.getKey());
-                        orderRollNo.add(dsp.child("Roll No").getValue().toString());
                         orderTime.add(dsp.child("Time to deliver").getValue().toString());
+                        orderRollNo.add(dsp.child("Roll No").getValue().toString());
                     }
                 }
                 orderListAdapter = new OrderListAdapter(orderID, orderTime, orderRollNo, getApplicationContext());
