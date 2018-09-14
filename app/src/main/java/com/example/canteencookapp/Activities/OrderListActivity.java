@@ -82,6 +82,8 @@ public class OrderListActivity extends AppCompatActivity {
                 Intent fullOrder = new Intent(OrderListActivity.this, FullOrderDetailActivity.class);
                 fullOrder.putExtra("OrderID", orderID.get(position));
                 fullOrder.putExtra("Category",CATEGORY);
+                fullOrder.putExtra("Time",orderTime.get(position));
+                fullOrder.putExtra("RollNo", orderRollNo.get(position));
                 startActivity(fullOrder);
             }
         });
