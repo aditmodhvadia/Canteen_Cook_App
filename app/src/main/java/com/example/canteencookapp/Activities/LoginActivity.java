@@ -87,7 +87,6 @@ public class LoginActivity extends AppCompatActivity {
 //                    send category through intent
                     String category = dataSnapshot.child(ID).child(CATEGORY).getValue().toString();
                     Intent i = new Intent(LoginActivity.this, OrderListActivity.class);
-                    progressBar.incrementProgressBy(2);
                     i.putExtra(CATEGORY,category);
                     progressBar.setVisibility(View.GONE);
                     idEditText.setText("");

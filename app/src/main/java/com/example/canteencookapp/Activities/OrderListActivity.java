@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,6 +73,16 @@ public class OrderListActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(OrderListActivity.this, databaseError.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ordersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent fullOrder = new Intent(OrderListActivity.this, FullOrderDetailActivity.class);
+                fullOrder.putExtra("OrderID", orderID.get(position));
+                fullOrder.putExtra("Category",CATEGORY);
+                startActivity(fullOrder);
             }
         });
 
