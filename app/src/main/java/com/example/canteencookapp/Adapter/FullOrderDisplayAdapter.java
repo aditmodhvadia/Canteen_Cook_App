@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -13,15 +15,16 @@ import java.util.ArrayList;
 
 public class FullOrderDisplayAdapter extends BaseAdapter {
 
-    ArrayList<String> orderItemName, orderItemQuantity;
+    ArrayList<String> orderItemName, orderItemQuantity, orderItemStatus;
     Context context;
     LayoutInflater inflater;
 
-    TextView orderItemNameTextView, orderItemQuantityTextView;
+    TextView orderItemNameTextView, orderItemQuantityTextView, orderStatusTextView;
 
-    public FullOrderDisplayAdapter(ArrayList<String> orderItemName, ArrayList<String> orderItemQuantity, Context context) {
+    public FullOrderDisplayAdapter(ArrayList<String> orderItemName, ArrayList<String> orderItemQuantity, ArrayList<String> orderItemStatus, Context context) {
         this.orderItemName = orderItemName;
         this.orderItemQuantity = orderItemQuantity;
+        this.orderItemStatus = orderItemStatus;
         this.context = context;
         inflater = LayoutInflater.from(context);
     }
@@ -48,10 +51,16 @@ public class FullOrderDisplayAdapter extends BaseAdapter {
 
         orderItemNameTextView = v.findViewById(R.id.orderItemNameTextView);
         orderItemQuantityTextView = v.findViewById(R.id.orderItemQuantityTextView);
+        orderStatusTextView = v.findViewById(R.id.orderStatusTextView);
 
         orderItemNameTextView.setText(orderItemName.get(position));
         orderItemQuantityTextView.setText(orderItemQuantity.get(position));
+        orderStatusTextView.setText(orderItemStatus.get(position));
+
+//        Animation animation = AnimationUtils.loadAnimation(context, R.anim.fade_in);
+//        v.startAnimation(animation);
 
         return v;
+
     }
 }

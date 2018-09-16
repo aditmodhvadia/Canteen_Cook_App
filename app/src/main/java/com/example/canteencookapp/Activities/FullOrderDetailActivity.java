@@ -1,9 +1,13 @@
 package com.example.canteencookapp.Activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,7 +28,7 @@ public class FullOrderDetailActivity extends AppCompatActivity {
 
 //    Variables
     String CATEGORY, ORDER_ID, ORDER_TIME, ROLL_NO;
-    ArrayList<String> orderItemName, orderItemQuantity;
+    ArrayList<String> orderItemName, orderItemQuantity, orderItemStatus;
     FullOrderDisplayAdapter fullOrderDisplayAdapter;
     DatabaseReference orderRoot;
 
@@ -35,6 +39,7 @@ public class FullOrderDetailActivity extends AppCompatActivity {
 
         orderItemName = new ArrayList<>();
         orderItemQuantity = new ArrayList<>();
+        orderItemStatus = new ArrayList<>();
         fullOrderListView = findViewById(R.id.fullOrderListView);
 
         Intent data = getIntent();
@@ -49,15 +54,17 @@ public class FullOrderDetailActivity extends AppCompatActivity {
         orderRoot.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                orderItemName.clear();
-////                orderItemQuantity.clear();
+                orderItemName.clear();
+                orderItemQuantity.clear();
+                orderItemStatus.clear();
                 for (DataSnapshot dsp : dataSnapshot.getChildren()){
                     if(!orderItemName.contains(dsp.getKey())){
                         orderItemName.add(dsp.getKey());
                         orderItemQuantity.add(dsp.child("Quantity").getValue().toString());
+                        orderItemStatus.add(dsp.child("Status").getValue().toString());
                     }
                 }
-                fullOrderDisplayAdapter = new FullOrderDisplayAdapter(orderItemName, orderItemQuantity, getApplicationContext());
+                fullOrderDisplayAdapter = new FullOrderDisplayAdapter(orderItemName, orderItemQuantity, orderItemStatus, getApplicationContext());
                 fullOrderListView.setAdapter(fullOrderDisplayAdapter);
             }
 
@@ -67,12 +74,39 @@ public class FullOrderDetailActivity extends AppCompatActivity {
             }
         });
 
-//        orderItemName.add("Testing 1");
-//        orderItemName.add("Testing 2");
-//        orderItemName.add("Testing 3");
-//        orderItemQuantity.add("1");
-//        orderItemQuantity.add("2");
-//        orderItemQuantity.add("3");
+        fullOrderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(FullOrderDetailActivity.this);
+                builder.setTitle("Select Status of Item");
+                builder.setMessage("Select the Status to display to the Customer");
+//                todo: find better solution to neutral button if possible
+                builder.setNeutralButton("Cooking", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        orderRoot.child(orderItemName.get(position)).child("Status").setValue("Cooking");
+                    }
+                });
+
+
+                builder.setPositiveButton("Ready", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        orderRoot.child(orderItemName.get(position)).child("Status").setValue("Ready");
+                    }
+                });
+
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                AlertDialog dialog = builder.show();
+            }
+        });
 
     }
 }
