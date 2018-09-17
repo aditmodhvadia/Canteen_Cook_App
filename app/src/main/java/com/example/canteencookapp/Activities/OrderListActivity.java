@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.canteencookapp.Adapter.OrderListAdapter;
 import com.example.canteencookapp.R;
+import com.example.canteencookapp.Service.MyNotificationService;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -120,5 +121,19 @@ public class OrderListActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Intent service = new Intent(this, MyNotificationService.class);
+        service.putExtra("Category", CATEGORY);
+        startService(service);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        stopService(new Intent(this, MyNotificationService.class));
     }
 }
