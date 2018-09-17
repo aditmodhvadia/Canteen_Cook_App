@@ -4,10 +4,13 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -15,8 +18,17 @@ import android.widget.Toast;
 
 import com.example.canteencookapp.Activities.OrderListActivity;
 import com.example.canteencookapp.R;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MyNotificationService extends Service {
+
+    DatabaseReference orderRoot;
+    String CATEGORY;
+
     public MyNotificationService() {
     }
 
@@ -31,9 +43,43 @@ public class MyNotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Toast.makeText(this, "Service started", Toast.LENGTH_SHORT).show();
+        CATEGORY = intent.getStringExtra("Category");
+        orderRoot = FirebaseDatabase.getInstance().getReference().child("Order");
+
+        orderRoot.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if (dataSnapshot.child("Items").child(CATEGORY).exists()) {
+                    Log.i("Testing", dataSnapshot.getKey());
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if (dataSnapshot.child("Items").child(CATEGORY).exists()) {
+                    customNotification(CATEGORY);
+                    Log.i("Testing child changed", dataSnapshot.getKey());
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 //        todo: add listener for data change in database
-        customNotification(intent.getStringExtra("Category"));
+//        customNotification(CATEGORY);
 
 
         return START_STICKY;
