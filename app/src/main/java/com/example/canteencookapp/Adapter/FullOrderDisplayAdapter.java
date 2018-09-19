@@ -57,8 +57,9 @@ public class FullOrderDisplayAdapter extends BaseAdapter {
         orderItemQuantityTextView.setText(orderItemQuantity.get(position));
         orderStatusTextView.setText(orderItemStatus.get(position));
 
-//        Animation animation = AnimationUtils.loadAnimation(context, R.anim.fade_in);
-//        v.startAnimation(animation);
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.fade_in);
+        animation.setStartOffset(position * 10);
+        v.startAnimation(animation);
 
         return v;
 

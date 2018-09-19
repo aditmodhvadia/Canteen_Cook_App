@@ -5,6 +5,8 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -55,6 +57,10 @@ public class OrderListAdapter extends BaseAdapter {
         orderIDTextView.setText(orderID.get(position));
         orderRollNoTextView.setText(orderRollNo.get(position));
         orderTimeTextView.setText(orderTime.get(position));
+
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_in);
+        animation.setStartOffset(position * 10);
+        v.startAnimation(animation);
 
         return v;
     }
