@@ -22,12 +22,13 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText idEditText;
-    Button loginButton;
-    ProgressBar progressBar;
-
-    String CATEGORY = "Category";
-
+//    Layout Views
+    private EditText idEditText;
+    private Button loginButton;
+    private ProgressBar progressBar;
+//    Variables
+    private String CATEGORY = "Category";
+//    Firebase Variables
     DatabaseReference cookRoot;
 
     @Override
@@ -52,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                         activeNetwork.isConnectedOrConnecting();
                 if(isConnected){
                     progressBar.setVisibility(View.VISIBLE);
+//                    Validate the entries by the user
                     validateID();
                 }
                 else
@@ -105,7 +107,5 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, databaseError.toString(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 }
