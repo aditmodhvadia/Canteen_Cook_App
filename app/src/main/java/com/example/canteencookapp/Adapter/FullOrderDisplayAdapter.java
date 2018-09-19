@@ -15,11 +15,9 @@ import java.util.ArrayList;
 
 public class FullOrderDisplayAdapter extends BaseAdapter {
 
-    ArrayList<String> orderItemName, orderItemQuantity, orderItemStatus;
-    Context context;
-    LayoutInflater inflater;
-
-    TextView orderItemNameTextView, orderItemQuantityTextView, orderStatusTextView;
+    private ArrayList<String> orderItemName, orderItemQuantity, orderItemStatus;
+    private Context context;
+    private LayoutInflater inflater;
 
     public FullOrderDisplayAdapter(ArrayList<String> orderItemName, ArrayList<String> orderItemQuantity, ArrayList<String> orderItemStatus, Context context) {
         this.orderItemName = orderItemName;
@@ -49,14 +47,19 @@ public class FullOrderDisplayAdapter extends BaseAdapter {
 
         View v = inflater.inflate(R.layout.full_order_display_custom_layout,null);
 
+//        Layout Views
+        TextView orderItemNameTextView, orderItemQuantityTextView, orderStatusTextView;
+
         orderItemNameTextView = v.findViewById(R.id.orderItemNameTextView);
         orderItemQuantityTextView = v.findViewById(R.id.orderItemQuantityTextView);
         orderStatusTextView = v.findViewById(R.id.orderStatusTextView);
 
+//        Set text to all the TextViews
         orderItemNameTextView.setText(orderItemName.get(position));
         orderItemQuantityTextView.setText(orderItemQuantity.get(position));
         orderStatusTextView.setText(orderItemStatus.get(position));
 
+//        Start animation on individual list items
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.fade_in);
         animation.setStartOffset(position * 10);
         v.startAnimation(animation);

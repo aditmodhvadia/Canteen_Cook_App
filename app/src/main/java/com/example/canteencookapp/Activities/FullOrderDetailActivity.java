@@ -30,6 +30,7 @@ public class FullOrderDetailActivity extends AppCompatActivity {
     String CATEGORY, ORDER_ID, ORDER_TIME, ROLL_NO;
     ArrayList<String> orderItemName, orderItemQuantity, orderItemStatus;
     FullOrderDisplayAdapter fullOrderDisplayAdapter;
+//    Firebase Variables
     DatabaseReference orderRoot;
 
     @Override
@@ -40,10 +41,10 @@ public class FullOrderDetailActivity extends AppCompatActivity {
         orderItemName = new ArrayList<>();
         orderItemQuantity = new ArrayList<>();
         orderItemStatus = new ArrayList<>();
+
         fullOrderListView = findViewById(R.id.fullOrderListView);
 
         Intent data = getIntent();
-
         CATEGORY = data.getStringExtra("Category");
         ORDER_ID = data.getStringExtra("OrderID");
         ORDER_TIME = data.getStringExtra("Time");

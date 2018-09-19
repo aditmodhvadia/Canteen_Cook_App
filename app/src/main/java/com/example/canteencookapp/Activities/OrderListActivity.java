@@ -24,13 +24,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class OrderListActivity extends AppCompatActivity {
-
+//    Views
     TextView ordersHeadingTextView;
     ListView ordersListView;
     OrderListAdapter orderListAdapter;
-
+//    Firebase Variables
     DatabaseReference root;
-
+//    Variables
     ArrayList<String> orderID, orderTime, orderRollNo;
     String CATEGORY;
 
@@ -41,6 +41,7 @@ public class OrderListActivity extends AppCompatActivity {
 
         ordersHeadingTextView = findViewById(R.id.ordersHeadingTextView);
         ordersListView = findViewById(R.id.ordersListView);
+
         orderID = new ArrayList<>();
         orderTime = new ArrayList<>();
         orderRollNo = new ArrayList<>();
@@ -52,36 +53,6 @@ public class OrderListActivity extends AppCompatActivity {
 
         root = FirebaseDatabase.getInstance().getReference();
 //        root.keepSynced(true);
-
-        //test with on Child event listener
-//        root.child("Order").addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                ordersHeadingTextView.setText("Key = " +dataSnapshot.getKey()+"\nValue = " +dataSnapshot.getValue().toString() +"\n String = " +s);
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                ordersHeadingTextView.setText("Key = " +dataSnapshot.getKey()+"\nValue = " +dataSnapshot.getValue().toString() +"\n String = " +s);
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//                ordersHeadingTextView.setText("Key = " +dataSnapshot.getKey()+"\nValue = " +dataSnapshot.getValue().toString());
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
 
         root.child("Order").addValueEventListener(new ValueEventListener() {
             @Override
@@ -111,6 +82,7 @@ public class OrderListActivity extends AppCompatActivity {
         ordersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Open full order detail activity by passing the order id, category, time and rollno
                 Intent fullOrder = new Intent(OrderListActivity.this, FullOrderDetailActivity.class);
                 fullOrder.putExtra("OrderID", orderID.get(position));
                 fullOrder.putExtra("Category",CATEGORY);
@@ -120,12 +92,12 @@ public class OrderListActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+//        Start Notification Service when activity is paused
         Intent service = new Intent(this, MyNotificationService.class);
         service.putExtra("Category", CATEGORY);
         startService(service);
@@ -134,6 +106,7 @@ public class OrderListActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
+//        Stop notification service when Activity is loaded again
         stopService(new Intent(this, MyNotificationService.class));
     }
 }
