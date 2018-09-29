@@ -78,10 +78,6 @@ public class MyNotificationService extends Service {
             }
         });
 
-//        todo: add listener for data change in database
-//        customNotification(CATEGORY);
-
-
         return START_STICKY;
     }
 
@@ -103,10 +99,10 @@ public class MyNotificationService extends Service {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "default")
                 .setContentTitle("New Order")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentText("A new Order is Placed")
+                .setContentText("A new Order was Placed")
                 .setVibrate(new long[]{0, 400, 200, 400})
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Blah Blah Blah"))
+                        .bigText("Click to see new Orders"))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
                 .setColorized(true)

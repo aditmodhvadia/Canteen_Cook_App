@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -24,15 +25,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class OrderListActivity extends AppCompatActivity {
-//    Views
+    //    Views
     TextView ordersHeadingTextView;
     ListView ordersListView;
     OrderListAdapter orderListAdapter;
-//    Firebase Variables
+    //    Firebase Variables
     DatabaseReference root;
-//    Variables
+    //    Variables
     ArrayList<String> orderID, orderTime, orderRollNo;
     String CATEGORY;
+    static Intent service;
+    static boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,8 @@ public class OrderListActivity extends AppCompatActivity {
 
         Intent data = getIntent();
         CATEGORY = data.getStringExtra("Category");
+
+        service = new Intent(this, MyNotificationService.class);
 
         ordersHeadingTextView.setText(ordersHeadingTextView.getText().toString() + data.getStringExtra("Category"));
 
@@ -85,8 +90,8 @@ public class OrderListActivity extends AppCompatActivity {
 //                Open full order detail activity by passing the order id, category, time and rollno
                 Intent fullOrder = new Intent(OrderListActivity.this, FullOrderDetailActivity.class);
                 fullOrder.putExtra("OrderID", orderID.get(position));
-                fullOrder.putExtra("Category",CATEGORY);
-                fullOrder.putExtra("Time",orderTime.get(position));
+                fullOrder.putExtra("Category", CATEGORY);
+                fullOrder.putExtra("Time", orderTime.get(position));
                 fullOrder.putExtra("RollNo", orderRollNo.get(position));
                 startActivity(fullOrder);
             }
@@ -95,18 +100,34 @@ public class OrderListActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //Stop service when back pressed to open login activity
+        flag = false;
+        stopService(service);
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
 //        Start Notification Service when activity is paused
-        Intent service = new Intent(this, MyNotificationService.class);
         service.putExtra("Category", CATEGORY);
+        flag = true;
         startService(service);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        flag = false;
+        stopService(service);
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
 //        Stop notification service when Activity is loaded again
-        stopService(new Intent(this, MyNotificationService.class));
+        flag = false;
+        stopService(service);
     }
 }
