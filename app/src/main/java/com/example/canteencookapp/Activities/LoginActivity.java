@@ -2,6 +2,7 @@ package com.example.canteencookapp.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
@@ -29,6 +30,8 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 //    Variables
     private String CATEGORY = "Category";
+    private String MyPREFERENCES = "Login Data";
+    SharedPreferences pref;
 //    Firebase Variables
     DatabaseReference cookRoot;
 
@@ -37,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         idEditText = findViewById(R.id.idEditText);
         loginButton = findViewById(R.id.loginButton);
@@ -93,6 +96,10 @@ public class LoginActivity extends AppCompatActivity {
                     i.putExtra(CATEGORY,category);
                     progressBar.setVisibility(View.GONE);
                     idEditText.setText("");
+//                    Save value of code in Shared preferences
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString(CATEGORY, category);
+                    editor.apply();
                     startActivity(i);
                 }
                 else{
@@ -115,5 +122,16 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         if(OrderListActivity.flag)
             stopService(OrderListActivity.service);
+
+        pref = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+        if(pref.contains(CATEGORY)){
+            Intent i = new Intent(LoginActivity.this, OrderListActivity.class);
+            i.putExtra(CATEGORY,pref.getString(CATEGORY, null));
+            startActivity(i);
+        }
+
+
+
     }
 }

@@ -1,6 +1,8 @@
 package com.example.canteencookapp.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -105,6 +107,10 @@ public class OrderListActivity extends AppCompatActivity {
         //Stop service when back pressed to open login activity
         flag = false;
         stopService(service);
+        String myPREFERENCES = "Login Data";
+        SharedPreferences.Editor editor = getSharedPreferences(myPREFERENCES,Context.MODE_PRIVATE).edit();
+        editor.clear();
+        editor.apply();
     }
 
     @Override
