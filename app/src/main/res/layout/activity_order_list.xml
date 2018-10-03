@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Activities.OrderListActivity">
 
 
@@ -12,11 +12,16 @@
         android:id="@+id/ordersHeadingTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Your Orders: "
         android:textAlignment="center"
-        android:text="Your Orders: " />
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
 
     <ListView
         android:id="@+id/ordersListView"
+        android:divider="#fff"
+        android:dividerHeight="5dp"
+        android:paddingVertical="10dp"
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

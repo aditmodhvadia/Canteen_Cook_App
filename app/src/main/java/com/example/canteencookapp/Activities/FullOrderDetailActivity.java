@@ -23,14 +23,15 @@ import java.util.ArrayList;
 
 public class FullOrderDetailActivity extends AppCompatActivity {
 
-//    Views
+    //    Views
     ListView fullOrderListView;
+    TextView orderIDTextView;
 
-//    Variables
+    //    Variables
     String CATEGORY, ORDER_ID, ORDER_TIME, ROLL_NO;
     ArrayList<String> orderItemName, orderItemQuantity, orderItemStatus;
     FullOrderDisplayAdapter fullOrderDisplayAdapter;
-//    Firebase Variables
+    //    Firebase Variables
     DatabaseReference orderRoot;
 
     @Override
@@ -43,12 +44,15 @@ public class FullOrderDetailActivity extends AppCompatActivity {
         orderItemStatus = new ArrayList<>();
 
         fullOrderListView = findViewById(R.id.fullOrderListView);
+        orderIDTextView = findViewById(R.id.orderIDTextView);
 
         Intent data = getIntent();
         CATEGORY = data.getStringExtra("Category");
         ORDER_ID = data.getStringExtra("OrderID");
         ORDER_TIME = data.getStringExtra("Time");
         ROLL_NO = data.getStringExtra("RollNo");
+
+        orderIDTextView.setText(String.format("Order ID: %s", ORDER_ID));
 
         orderRoot = FirebaseDatabase.getInstance().getReference().child("Order").child(ORDER_ID).child("Items").child(CATEGORY);
 
@@ -58,8 +62,8 @@ public class FullOrderDetailActivity extends AppCompatActivity {
                 orderItemName.clear();
                 orderItemQuantity.clear();
                 orderItemStatus.clear();
-                for (DataSnapshot dsp : dataSnapshot.getChildren()){
-                    if(!orderItemName.contains(dsp.getKey())){
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    if (!orderItemName.contains(dsp.getKey())) {
                         orderItemName.add(dsp.getKey());
                         orderItemQuantity.add(dsp.child("Quantity").getValue().toString());
                         orderItemStatus.add(dsp.child("Status").getValue().toString());

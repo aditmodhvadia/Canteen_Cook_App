@@ -8,11 +8,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import com.example.canteencookapp.R;
+
 import java.util.ArrayList;
 
 public class OrderListAdapter extends BaseAdapter {
-//    Variables
+    //    Variables
     private ArrayList<String> orderID, orderTime, orderRollNo;
     private Context context;
     private LayoutInflater inflater;
@@ -43,7 +45,7 @@ public class OrderListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View v = inflater.inflate(R.layout.order_list_display_custom_layout,null);
+        View v = inflater.inflate(R.layout.order_list_display_custom_layout, null);
 
 //        Layout Views
         TextView orderTimeTextView, orderIDTextView, orderRollNoTextView;
@@ -53,13 +55,13 @@ public class OrderListAdapter extends BaseAdapter {
         orderRollNoTextView = v.findViewById(R.id.orderRollNoTextView);
 
 //        Set text for all the TextViews
-        orderIDTextView.setText(orderID.get(position));
+        orderIDTextView.setText(String.format("Order ID %s", orderID.get(position)));
         orderRollNoTextView.setText(orderRollNo.get(position));
         orderTimeTextView.setText(orderTime.get(position));
 
 //        Start animation on individual list items
-        Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_in);
-        animation.setStartOffset(position * 10);
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.fade_in);
+        animation.setStartOffset(position * 5);
         v.startAnimation(animation);
 
         return v;
