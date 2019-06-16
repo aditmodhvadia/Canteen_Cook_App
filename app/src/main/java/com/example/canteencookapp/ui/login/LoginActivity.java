@@ -1,4 +1,4 @@
-package com.example.canteencookapp.Activities;
+package com.example.canteencookapp.ui.login;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +14,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.canteencookapp.ui.orderlist.OrderListActivity;
 import com.example.canteencookapp.R;
-import com.example.canteencookapp.Service.MyNotificationService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-    tools:context=".MainActivity">
+    tools:context=".ui.login.LoginActivity">
 
     <!-- TODO: improve the UI and set the toolbar to extend down-->
 

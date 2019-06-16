@@ -1,4 +1,4 @@
-package com.example.canteencookapp.Activities;
+package com.example.canteencookapp.ui.orderdetail;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.canteencookapp.Adapter.FullOrderDisplayAdapter;
 import com.example.canteencookapp.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

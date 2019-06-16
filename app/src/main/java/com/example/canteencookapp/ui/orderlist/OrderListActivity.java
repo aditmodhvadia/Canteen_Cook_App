@@ -1,23 +1,20 @@
-package com.example.canteencookapp.Activities;
+package com.example.canteencookapp.ui.orderlist;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.canteencookapp.Adapter.OrderListAdapter;
+import com.example.canteencookapp.ui.orderdetail.FullOrderDetailActivity;
 import com.example.canteencookapp.R;
 import com.example.canteencookapp.Service.MyNotificationService;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +24,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class OrderListActivity extends AppCompatActivity {
+    public static Intent service;
+    public static boolean flag = false;
     //    Views
     TextView ordersHeadingTextView;
     ListView ordersListView;
@@ -36,8 +35,6 @@ public class OrderListActivity extends AppCompatActivity {
     //    Variables
     ArrayList<String> orderID, orderTime, orderRollNo;
     String CATEGORY;
-    static Intent service;
-    static boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +105,7 @@ public class OrderListActivity extends AppCompatActivity {
         flag = false;
         stopService(service);
         String myPREFERENCES = "Login Data";
-        SharedPreferences.Editor editor = getSharedPreferences(myPREFERENCES,Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(myPREFERENCES, Context.MODE_PRIVATE).edit();
         editor.clear();
         editor.apply();
     }

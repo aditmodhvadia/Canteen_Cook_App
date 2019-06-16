@@ -1,4 +1,4 @@
-package com.example.canteencookapp.Adapter;
+package com.example.canteencookapp.ui.orderdetail;
 
 import android.content.Context;
 import android.view.LayoutInflater;
