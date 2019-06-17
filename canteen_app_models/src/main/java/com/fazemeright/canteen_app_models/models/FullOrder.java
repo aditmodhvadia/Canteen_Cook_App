@@ -76,4 +76,13 @@ public class FullOrder implements Serializable {
                 + "\n Item Data : " + itemData.toString();
 
     }
+
+    public boolean contains(String category) {
+        for (CartItem item : orderItems) {
+            if (item.itemCategory.equals(category)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

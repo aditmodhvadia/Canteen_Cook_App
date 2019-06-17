@@ -3,6 +3,7 @@ package com.example.canteencookapp.ui.orderlist;
 import android.content.Context;
 
 import com.example.canteencookapp.ui.base.BaseView;
+import com.fazemeright.canteen_app_models.models.FullOrder;
 
 import java.util.ArrayList;
 
@@ -12,5 +13,5 @@ public interface OrderListMvpView extends BaseView {
 
     void onFetchingOrderListFailed(String errMsg);
 
-    void onFetchingOrderListSuccessful(ArrayList<String> orderID, ArrayList<String> orderRollNo, ArrayList<String> orderTime);
+    void onFetchingOrderListSuccessful(ArrayList<FullOrder> orderList);
 }

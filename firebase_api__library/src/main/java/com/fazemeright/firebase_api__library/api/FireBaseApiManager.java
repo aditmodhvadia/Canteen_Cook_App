@@ -344,6 +344,32 @@ public class FireBaseApiManager {
         return getCurrentUserEmail() != null;
     }
 
+    public void cookOrderListListener(final String category, final DBValueEventListener<ArrayList<FullOrder>> eventListener) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference()
+                .child(BaseUrl.USER_ORDER);
+
+        apiWrapper.valueEventListener(dbRef, new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<FullOrder> orderList = new ArrayList<>();
+                for (DataSnapshot rollNoRoot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot ordersRoot : rollNoRoot.getChildren()) {
+                        FullOrder order = ordersRoot.getValue(FullOrder.class);
+                        if (order != null && order.contains(category)) {
+                            orderList.add(order);
+                        }
+                    }
+                }
+                eventListener.onDataChange(orderList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                eventListener.onCancelled(new Error(databaseError.getMessage()));
+            }
+        });
+    }
+
 
     public static class BaseUrl {
         // Declare the constants

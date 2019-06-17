@@ -3,15 +3,15 @@ package com.example.canteencookapp.ui.orderlist;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.canteencookapp.R;
 import com.example.canteencookapp.ui.base.BaseActivity;
-import com.example.canteencookapp.ui.orderdetail.OrderDetailActivity;
+import com.fazemeright.canteen_app_models.models.FullOrder;
 
 import java.util.ArrayList;
 
@@ -19,16 +19,24 @@ public class OrderListActivity extends BaseActivity implements OrderListMvpView 
     //    public static Intent service;
     public static boolean flag = false;
     private TextView ordersHeadingTextView;
-    private ListView ordersListView;
+    private RecyclerView ordersRecyclerView;
     private OrderListAdapter orderListAdapter;
     private String CATEGORY;
     private OrderListPresenter<OrderListActivity> presenter;
+    private OrderListRecyclerViewDisplayAdapter adapter;
+    private ArrayList<FullOrder> orderList;
 
 
     @Override
     public void initViews() {
         ordersHeadingTextView = findViewById(R.id.ordersHeadingTextView);
-        ordersListView = findViewById(R.id.ordersListView);
+        ordersRecyclerView = findViewById(R.id.ordersRecyclerView);
+        orderList = new ArrayList<>();
+        ordersRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        ordersRecyclerView.addItemDecoration(new DividerItemDecoration(ordersRecyclerView.getContext(), LinearLayoutManager.VERTICAL));
+        adapter = new OrderListRecyclerViewDisplayAdapter(orderList, mContext);
+        ordersRecyclerView.setAdapter(adapter);
+
         presenter = new OrderListPresenter<>();
         presenter.onAttach(this);
 
@@ -37,7 +45,7 @@ public class OrderListActivity extends BaseActivity implements OrderListMvpView 
 
 //        service = new Intent(this, MyNotificationService.class);
 
-        ordersHeadingTextView.setText(ordersHeadingTextView.getText().toString() + data.getStringExtra("Category"));
+        ordersHeadingTextView.setText(String.format("%s%s", ordersHeadingTextView.getText().toString(), CATEGORY));
 
 
         showLoading();
@@ -45,23 +53,9 @@ public class OrderListActivity extends BaseActivity implements OrderListMvpView 
     }
 
     @Override
-    public void onFetchingOrderListSuccessful(final ArrayList<String> orderID, final ArrayList<String> orderRollNo, final ArrayList<String> orderTime) {
+    public void onFetchingOrderListSuccessful(ArrayList<FullOrder> orderList) {
         hideLoading();
-        orderListAdapter = new OrderListAdapter(orderID, orderTime, orderRollNo, mContext);
-        ordersListView.setAdapter(orderListAdapter);
-
-        ordersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Open full order detail activity by passing the order id, category, time and rollno
-                Intent fullOrder = new Intent(OrderListActivity.this, OrderDetailActivity.class);
-                fullOrder.putExtra("OrderID", orderID.get(position));
-                fullOrder.putExtra("Category", CATEGORY);
-                fullOrder.putExtra("Time", orderTime.get(position));
-                fullOrder.putExtra("RollNo", orderRollNo.get(position));
-                startActivity(fullOrder);
-            }
-        });
+        adapter.updateOrderList(orderList);
     }
 
     @Override
