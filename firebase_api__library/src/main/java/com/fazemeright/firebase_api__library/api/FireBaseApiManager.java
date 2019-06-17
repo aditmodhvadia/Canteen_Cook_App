@@ -57,13 +57,13 @@ public class FireBaseApiManager {
     /**
      * Call to fetch details of an Orders placed by a User
      *
-     * @param orderID              Unique Order ID
+     * @param order                Full Order
      * @param dbValueEventListener Callback for ValueEventListener
      */
-    public void orderDetailListener(@NonNull String orderID, final DBValueEventListener<FullOrder> dbValueEventListener) {
+    public void cookOrderDetailListener(@NonNull FullOrder order, final DBValueEventListener<FullOrder> dbValueEventListener) {
 
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference()
-                .child(BaseUrl.USER_ORDER).child(AppUtils.getRollNoFromEmail(apiWrapper.getCurrentUserEmail())).child(orderID);
+                .child(BaseUrl.USER_ORDER).child(order.getRollNo()).child(order.getOrderId());
 
         apiWrapper.valueEventListener(dbRef, new ValueEventListener() {
             @Override

@@ -1,110 +1,59 @@
 package com.example.canteencookapp.ui.orderdetail;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.example.canteencookapp.R;
 import com.example.canteencookapp.ui.base.BaseActivity;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
+import com.example.canteencookapp.utils.AlertUtils;
+import com.example.canteencookapp.utils.DialogSimple;
+import com.fazemeright.canteen_app_models.models.FullOrder;
 
 public class OrderDetailActivity extends BaseActivity implements OrderDetailMvpView {
 
-    private DatabaseReference orderRoot;
-    private ListView fullOrderListView;
+    private RecyclerView orderDetailRecyclerView;
     private TextView orderIDTextView;
-    private String CATEGORY, ORDER_ID, ORDER_TIME, ROLL_NO;
-    private ArrayList<String> orderItemName, orderItemQuantity, orderItemStatus;
-    private OrderDetailDisplayAdapter orderDetailDisplayAdapter;
-
+    private OrderDetailRecyclerViewDisplayAdapter adapter;
+    private FullOrder order;
+    private OrderDetailPresenter<OrderDetailActivity> presenter;
 
     @Override
     public void initViews() {
-        fullOrderListView = findViewById(R.id.fullOrderListView);
+        orderDetailRecyclerView = findViewById(R.id.fullOrderListView);
         orderIDTextView = findViewById(R.id.orderIDTextView);
-
-        orderItemName = new ArrayList<>();
-        orderItemQuantity = new ArrayList<>();
-        orderItemStatus = new ArrayList<>();
+        presenter = new OrderDetailPresenter<>();
+        presenter.onAttach(this);
 
         Intent data = getIntent();
-        CATEGORY = data.getStringExtra("Category");
-        ORDER_ID = data.getStringExtra("OrderID");
-        ORDER_TIME = data.getStringExtra("Time");
-        ROLL_NO = data.getStringExtra("RollNo");
+        order = (FullOrder) data.getSerializableExtra("OrderData");
 
-        orderIDTextView.setText(String.format("Order ID: %s", ORDER_ID));
+        orderIDTextView.setText(String.format("Order ID: %s", order.getOrderId()));
 
-        orderRoot = FirebaseDatabase.getInstance().getReference().child("Order").child(ORDER_ID).child("Items").child(CATEGORY);
+        orderDetailRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        orderDetailRecyclerView.addItemDecoration(new DividerItemDecoration(orderDetailRecyclerView.getContext(), LinearLayoutManager.VERTICAL));
+        adapter = new OrderDetailRecyclerViewDisplayAdapter(order, mContext);
+        orderDetailRecyclerView.setAdapter(adapter);
 
-        orderRoot.addValueEventListener(new ValueEventListener() {
+        presenter.fetchOrderDetail(order);
+    }
+
+    @Override
+    public void onOrderFetchedSuccessfully(FullOrder updatedOrder) {
+        order = updatedOrder;
+        adapter.updateOrderList(order);
+    }
+
+    @Override
+    public void onOrderFetchingFailed(String errMsg) {
+        AlertUtils.showAlertBox(mContext, "Try again later!", errMsg, getString(R.string.ok), new DialogSimple.AlertDialogListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                orderItemName.clear();
-                orderItemQuantity.clear();
-                orderItemStatus.clear();
-                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    if (!orderItemName.contains(dsp.getKey())) {
-                        orderItemName.add(dsp.getKey());
-                        orderItemQuantity.add(dsp.child("Quantity").getValue().toString());
-                        orderItemStatus.add(dsp.child("Status").getValue().toString());
-                    }
-                }
-                orderDetailDisplayAdapter = new OrderDetailDisplayAdapter(orderItemName, orderItemQuantity, orderItemStatus, getApplicationContext());
-                fullOrderListView.setAdapter(orderDetailDisplayAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            public void onButtonClicked() {
+                finish();
             }
         });
-
-        fullOrderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(OrderDetailActivity.this);
-                builder.setTitle("Select Status of Item");
-                builder.setMessage("Select the Status to display to the Customer");
-//                todo: find better solution to neutral button if possible
-                builder.setNeutralButton("Cooking", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        orderRoot.child(orderItemName.get(position)).child("Status").setValue("Cooking");
-                    }
-                });
-
-
-                builder.setPositiveButton("Ready", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        orderRoot.child(orderItemName.get(position)).child("Status").setValue("Ready");
-                    }
-                });
-
-
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-
-                AlertDialog dialog = builder.show();
-            }
-        });
-
     }
 
     @Override

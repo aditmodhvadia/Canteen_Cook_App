@@ -20,7 +20,6 @@ public class OrderListActivity extends BaseActivity implements OrderListMvpView 
     public static boolean flag = false;
     private TextView ordersHeadingTextView;
     private RecyclerView ordersRecyclerView;
-    private OrderListAdapter orderListAdapter;
     private String CATEGORY;
     private OrderListPresenter<OrderListActivity> presenter;
     private OrderListRecyclerViewDisplayAdapter adapter;
