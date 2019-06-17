@@ -2,7 +2,6 @@ package com.example.canteencookapp.ui.login;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.View;
@@ -11,6 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.canteencookapp.R;
+import com.example.canteencookapp.data.prefs.CanteenPreferenceManager;
+import com.example.canteencookapp.data.prefs.PreferenceKeys;
 import com.example.canteencookapp.ui.base.BaseActivity;
 import com.example.canteencookapp.ui.orderlist.OrderListActivity;
 import com.example.canteencookapp.utils.AlertUtils;
@@ -18,12 +19,10 @@ import com.example.canteencookapp.utils.DialogSimple;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView, View.OnClickListener {
 
-    private SharedPreferences pref;
     private EditText idEditText;
     private Button loginButton;
     //    Variables
     private String CATEGORY = "Category";
-    private String MyPREFERENCES = "Login Data";
     private LoginPresenter<LoginActivity> presenter;
 
     @Override
@@ -54,13 +53,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView, View.On
 //            stopService(OrderListActivity.service);
         }
 
-        pref = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-
-        if (pref.contains(CATEGORY)) {
-            Intent i = new Intent(LoginActivity.this, OrderListActivity.class);
-            i.putExtra(CATEGORY, pref.getString(CATEGORY, null));
-            startActivity(i);
-        }
     }
 
     @Override
@@ -97,13 +89,14 @@ public class LoginActivity extends BaseActivity implements LoginMvpView, View.On
     @Override
     public void onSuccessFullVerification(String category) {
         hideLoading();
-        Intent i = new Intent(LoginActivity.this, OrderListActivity.class);
-        i.putExtra(CATEGORY, category);
+
         idEditText.setText("");
 //        Save value of code in Shared preferences
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(CATEGORY, category);
-        editor.apply();
+        CanteenPreferenceManager.getInstance().setBoolean(mContext, PreferenceKeys.IS_LOGIN, true);
+        CanteenPreferenceManager.getInstance().setString(mContext, PreferenceKeys.CATEGORY, category);
+        Intent i = new Intent(LoginActivity.this, OrderListActivity.class);
+        i.putExtra(CATEGORY, category);
         startActivity(i);
+        finish();
     }
 }
