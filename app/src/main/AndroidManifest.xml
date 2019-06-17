@@ -27,7 +27,7 @@
             android:name=".ui.orderlist.OrderListActivity"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
         <activity
-            android:name=".ui.orderdetail.FullOrderDetailActivity"
+            android:name=".ui.orderdetail.OrderDetailActivity"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
 
         <service

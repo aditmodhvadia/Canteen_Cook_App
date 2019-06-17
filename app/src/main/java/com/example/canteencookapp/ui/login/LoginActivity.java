@@ -50,8 +50,9 @@ public class LoginActivity extends BaseActivity implements LoginMvpView, View.On
     @Override
     protected void onStart() {
         super.onStart();
-        if (OrderListActivity.flag)
-            stopService(OrderListActivity.service);
+        if (OrderListActivity.flag) {
+//            stopService(OrderListActivity.service);
+        }
 
         pref = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 

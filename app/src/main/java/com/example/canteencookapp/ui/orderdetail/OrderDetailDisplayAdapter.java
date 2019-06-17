@@ -13,13 +13,13 @@ import com.example.canteencookapp.R;
 
 import java.util.ArrayList;
 
-public class FullOrderDisplayAdapter extends BaseAdapter {
+public class OrderDetailDisplayAdapter extends BaseAdapter {
 
     private ArrayList<String> orderItemName, orderItemQuantity, orderItemStatus;
     private Context context;
     private LayoutInflater inflater;
 
-    public FullOrderDisplayAdapter(ArrayList<String> orderItemName, ArrayList<String> orderItemQuantity, ArrayList<String> orderItemStatus, Context context) {
+    public OrderDetailDisplayAdapter(ArrayList<String> orderItemName, ArrayList<String> orderItemQuantity, ArrayList<String> orderItemStatus, Context context) {
         this.orderItemName = orderItemName;
         this.orderItemQuantity = orderItemQuantity;
         this.orderItemStatus = orderItemStatus;
