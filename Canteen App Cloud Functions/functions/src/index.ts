@@ -40,13 +40,25 @@ export const onDatabaseOrderTestEntry = functions.database
     console.log(value);
     console.log(context.params.newOrderId);
     console.log(context.params.rollNo);
-    for (const cartItem of snapshot.child("cartItems").val()) {
+    /* for (const cartItem of snapshot.child("cartItems").val()) {
       console.log(cartItem.cartItemName);
-    }
+    } */
+
+    const payload = {
+      notification: {
+        title: "Test notification from Cloud Function",
+        text: "Sent from cloud functions"
+      },
+      data: {
+        temp: "Testing"
+      }
+    };
+    return admin.messaging().sendToTopic("chinese-cooks", payload);
+
     /* snapshot.child("cartItems").forEach(child => {
       child.child("itemStatus").ref.set("Received");
     }); */
-    return snapshot
+    /* return snapshot
       .child("status")
       .ref.set("In-Progress")
       .then(async event => {
@@ -60,13 +72,13 @@ export const onDatabaseOrderTestEntry = functions.database
               .child(context.params.newOrderId)
               .child("displayID")
               .ref.set(snap.numChildren().toString());
-          });
+          }); 
         // const actualSnap = await parentSnap.once("value");
 
         // actualSnap.child("cartItems").forEach(snap => {
         // console.log(snap);
         // });
-      });
+      });*/
   });
 
 /* export const onNewUserRegister = functions.auth.user().onCreate(user => {
