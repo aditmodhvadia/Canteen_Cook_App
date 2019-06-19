@@ -4,25 +4,20 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.example.canteencookapp.ui.base.BasePresenter;
+import com.fazemeright.firebase_api__library.listeners.DBValueEventListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> implements LoginMvpPresenter<V> {
+import java.util.ArrayList;
 
-    private DatabaseReference cookRoot;
-    private String CATEGORY = "Category";
+public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> implements LoginMvpPresenter<V> {
 
     public LoginPresenter() {
     }
 
     @Override
-    public void performLogin(final String userId) {
+    public void performLogin(String userId) {
         if (TextUtils.isEmpty(userId)) {
             getMvpView().onValueEntryError("Enter ID first");
             return;
@@ -33,34 +28,28 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
             return;
         }
 
-        cookRoot = FirebaseDatabase.getInstance().getReference().child("CookData");
-        cookRoot.addListenerForSingleValueEvent(new ValueEventListener() {
+        apiManager.verifyCookCode(userId, new DBValueEventListener<ArrayList<String>>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(userId).exists()) {
-//                    send category through intent
-                    final String category = dataSnapshot.child(userId).child(CATEGORY).getValue().toString();
-                    FirebaseMessaging.getInstance().subscribeToTopic(dataSnapshot.child(userId).child("Topic").getValue().toString())
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        getMvpView().onSuccessFullVerification(category);
-                                    } else {
-                                        getMvpView().onValueEntryError(task.getException().getMessage());
-                                    }
+            public void onDataChange(final ArrayList<String> data) {
+                FirebaseMessaging.getInstance().subscribeToTopic(data.get(1))
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    getMvpView().onSuccessFullVerification(data.get(0));
+                                } else {
+                                    getMvpView().onValueEntryError(task.getException().getMessage());
                                 }
-                            });
-                } else {
-                    getMvpView().onValueEntryError("Invalid ID");
-                }
+                            }
+                        });
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                getMvpView().onValueEntryError(databaseError.getMessage());
+            public void onCancelled(Error error) {
+                getMvpView().onValueEntryError(error.getMessage());
             }
         });
+
 
     }
 }

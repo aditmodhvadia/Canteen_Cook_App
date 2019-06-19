@@ -35,14 +35,30 @@ admin.initializeApp(functions.config().firebase);
 export const onDatabaseOrderTestEntry = functions.database
   .ref("UserOrderData/{rollNo}/{newOrderId}")
   .onCreate(async (snapshot, context) => {
-    const value = snapshot.val();
+    // const value = snapshot.val();
     // const parentSnap = snapshot.ref.parent;
-    console.log(value);
+    // console.log(value);
     console.log(context.params.newOrderId);
     console.log(context.params.rollNo);
-    /* for (const cartItem of snapshot.child("cartItems").val()) {
-      console.log(cartItem.cartItemName);
-    } */
+
+    let chinese = false;
+    let southIndian = false;
+    let pizzaSandwich = false;
+
+    const orderItems = snapshot.val().orderItems;
+    orderItems.forEach((items: any) => {
+      console.log(items.itemCategory);
+      if (items.itemCategory === "Chinese") {
+        console.log("Chinese found");
+        chinese = true;
+      } else if (items.itemCategory === "South Indian") {
+        console.log("South Indian found");
+        southIndian = true;
+      } else if (items.itemCategory === "Pizza Sandwich") {
+        console.log("Pizza Sandwich found");
+        pizzaSandwich = true;
+      }
+    });
 
     const payload = {
       notification: {
@@ -53,8 +69,18 @@ export const onDatabaseOrderTestEntry = functions.database
         temp: "Testing"
       }
     };
-    return admin.messaging().sendToTopic("chinese-cooks", payload);
-
+    const promises = []
+    if(chinese) {
+      promises.push(admin.messaging().sendToTopic("chinese-cooks", payload));
+    }
+    if(southIndian) {
+      promises.push(admin.messaging().sendToTopic("south-indian-cooks", payload));
+    }
+    if(pizzaSandwich) {
+      promises.push(admin.messaging().sendToTopic("pizza-sandwich-cooks", payload));
+    }
+    return Promise.all(promises);
+    
     /* snapshot.child("cartItems").forEach(child => {
       child.child("itemStatus").ref.set("Received");
     }); */

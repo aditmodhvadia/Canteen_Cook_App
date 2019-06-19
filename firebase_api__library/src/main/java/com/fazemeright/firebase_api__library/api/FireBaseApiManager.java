@@ -78,6 +78,34 @@ public class FireBaseApiManager {
         });
     }
 
+    public void verifyCookCode(@NonNull final String code, final DBValueEventListener<ArrayList<String>> valueEventListener) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(BaseUrl.COOK_DATA);
+
+        apiWrapper.valueEventListener(ref, new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(code).exists()) {
+                    String category = dataSnapshot.child(code).child(BaseUrl.CATEGORY).getValue().toString();
+                    String topic = dataSnapshot.child(code).child(BaseUrl.TOPIC).getValue().toString();
+                    ArrayList<String> result = new ArrayList<>();
+                    result.add(category);
+                    result.add(topic);
+
+                    valueEventListener.onDataChange(result);
+
+                } else {
+                    valueEventListener.onCancelled(new Error("Onvalid ID"));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                valueEventListener.onCancelled(new Error(databaseError.getMessage()));
+
+            }
+        });
+    }
+
     /**
      * Call to fetch List of all Orders placed by a User
      *
@@ -376,6 +404,10 @@ public class FireBaseApiManager {
         static final String USER_ORDER = "UserOrderData";
         static final String FOOD_MENU = "Food";
         static final String VERSION_CHECK = "version-check";
+
+        static final String COOK_DATA = "CookData";
+        static final String CATEGORY = "Category";
+        static final String TOPIC = "Topic";
 
         @Retention(RetentionPolicy.SOURCE)
         @StringDef({USER_ORDER, FOOD_MENU})
