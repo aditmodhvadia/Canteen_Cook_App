@@ -16,15 +16,10 @@ import android.widget.Toast;
 
 import com.example.canteencookapp.ui.orderlist.OrderListActivity;
 import com.example.canteencookapp.R;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class MyNotificationService extends Service {
 
-    DatabaseReference orderRoot;
+//    DatabaseReference orderRoot;
     String CATEGORY;
 
     public MyNotificationService() {
@@ -42,9 +37,9 @@ public class MyNotificationService extends Service {
 
         Toast.makeText(this, "Service started", Toast.LENGTH_SHORT).show();
         CATEGORY = intent.getStringExtra("Category");
-        orderRoot = FirebaseDatabase.getInstance().getReference().child("Order");
+//        orderRoot = FirebaseDatabase.getInstance().getReference().child("Order");
 
-        orderRoot.addChildEventListener(new ChildEventListener() {
+        /*orderRoot.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if (dataSnapshot.child("Items").child(CATEGORY).exists()) {
@@ -75,7 +70,7 @@ public class MyNotificationService extends Service {
 
             }
         });
-
+*/
         return START_STICKY;
     }
 
