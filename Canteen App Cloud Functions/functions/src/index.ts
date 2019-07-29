@@ -32,6 +32,69 @@ admin.initializeApp(functions.config().firebase);
     // return null;
   }); */
 
+export const onRatingForFoodItem = functions.database
+  .ref(
+    "UserOrderData/{rollNo}/{newOrderId}/orderItems/{itemPosition}/itemRating"
+  )
+  .onCreate(async (snapshot, context) => {
+    const rating = snapshot.val();
+    console.log(rating);
+    console.log(context.params.newOrderId);
+    console.log(context.params.itemPosition);
+
+    const snapdata = await admin
+      .database()
+      .ref("UserOrderData")
+      .child(context.params.rollNo)
+      .child(context.params.newOrderId)
+      .child("orderItems")
+      .child(context.params.itemPosition)
+      .once("value");
+
+    const itemCategoryValue = snapdata.child("/itemCategory").val();
+    const itemName = snapdata.child("/itemName").val();
+    // console.log(itemCategoryValue);
+    console.log(itemName);
+
+    /* return null; */
+    return admin
+      .database()
+      .ref("Food")
+      .child(itemCategoryValue)
+      .child(itemName)
+      .once("value")
+      .then(foodRoot => {
+        let noOfRating = foodRoot.child("NumberOfRating").val();
+        const currRating = foodRoot.child("Rating").val();
+        console.log(
+          "Before Current Rating " +
+            currRating +
+            +" Number of ratings: " +
+            noOfRating
+            +" Rating by user: " +
+            rating
+        );
+        let newRating = currRating * noOfRating;
+        noOfRating++;
+        newRating = newRating + rating;
+        newRating = newRating / noOfRating;
+
+        console.log(
+          "After Current Rating " +
+            currRating +
+            " New Rating " +
+            newRating +
+            " Number of ratings: " +
+            noOfRating
+        );
+        const promises = [];
+        promises.push(foodRoot.child("NumberOfRating").ref.set(noOfRating));
+        promises.push(foodRoot.child("Rating").ref.set(newRating));
+
+        return Promise.all(promises);
+      });
+  });
+
 export const onDatabaseOrderTestEntry = functions.database
   .ref("UserOrderData/{rollNo}/{newOrderId}")
   .onCreate(async (snapshot, context) => {
@@ -69,18 +132,22 @@ export const onDatabaseOrderTestEntry = functions.database
         temp: "Testing"
       }
     };
-    const promises = []
-    if(chinese) {
+    const promises = [];
+    if (chinese) {
       promises.push(admin.messaging().sendToTopic("chinese-cooks", payload));
     }
-    if(southIndian) {
-      promises.push(admin.messaging().sendToTopic("south-indian-cooks", payload));
+    if (southIndian) {
+      promises.push(
+        admin.messaging().sendToTopic("south-indian-cooks", payload)
+      );
     }
-    if(pizzaSandwich) {
-      promises.push(admin.messaging().sendToTopic("pizza-sandwich-cooks", payload));
+    if (pizzaSandwich) {
+      promises.push(
+        admin.messaging().sendToTopic("pizza-sandwich-cooks", payload)
+      );
     }
     return Promise.all(promises);
-    
+
     /* snapshot.child("cartItems").forEach(child => {
       child.child("itemStatus").ref.set("Received");
     }); */
