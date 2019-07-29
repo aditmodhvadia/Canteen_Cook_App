@@ -11,9 +11,9 @@
         android:id="@+id/orderIDTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:textAlignment="center"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+        tools:text="Order ID" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fullOrderListView"

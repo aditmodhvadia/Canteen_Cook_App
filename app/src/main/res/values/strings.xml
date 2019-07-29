@@ -6,4 +6,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="cancel">Cancel</string>
     <string name="ok">Ok</string>
+    <string name="code_hint">Code</string>
+    <string name="login_button_text">Login</string>
+    <string name="your_orders_header">Your Orders:</string>
 </resources>

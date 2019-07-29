@@ -11,29 +11,29 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="39dp"
-        android:text="TextView"
-        android:textColor="#000"
+        android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Item Name" />
 
     <TextView
         android:id="@+id/orderItemQuantityTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="66dp"
         android:layout_marginTop="39dp"
-        android:text="TextView"
-        android:textColor="#000"
+        android:layout_marginEnd="66dp"
+        android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Item Quantity" />
 
     <TextView
         android:id="@+id/orderStatusTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
         android:layout_marginTop="39dp"
-        android:text="TextView"
+        android:layout_marginEnd="40dp"
         app:layout_constraintEnd_toStartOf="@+id/orderItemQuantityTextView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Order Status" />
 </android.support.constraint.ConstraintLayout>

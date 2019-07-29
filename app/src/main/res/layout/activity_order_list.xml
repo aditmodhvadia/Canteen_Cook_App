@@ -11,7 +11,7 @@
         android:id="@+id/ordersHeadingTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Your Orders: "
+        android:text="@string/your_orders_header"
         android:textAlignment="center"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
 
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:divider="#fff"
+        android:divider="@android:color/white"
         android:dividerHeight="5dp"
         android:padding="10dp"
         android:paddingBottom="80dp" />
